@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Daily_Tracker.Api;
 
@@ -38,6 +39,11 @@ public class Program
         });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
         var frontendOrigins = builder.Configuration["Frontend:Origins"] ?? builder.Configuration["Frontend:Origin"];
         builder.Services.AddCors(options =>
