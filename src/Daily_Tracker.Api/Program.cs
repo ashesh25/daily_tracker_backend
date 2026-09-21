@@ -39,15 +39,17 @@ public class Program
 
         builder.Services.AddAuthorization();
 
-        var frontendOrigin = builder.Configuration["Frontend:Origin"];
+        var frontendOrigins = builder.Configuration["Frontend:Origins"] ?? builder.Configuration["Frontend:Origin"];
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
             {
                 var origins = new List<string> { "http://localhost:5173" };
-                if (!string.IsNullOrWhiteSpace(frontendOrigin))
+                if (!string.IsNullOrWhiteSpace(frontendOrigins))
                 {
-                    origins.Add(frontendOrigin);
+                    origins.AddRange(frontendOrigins
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                        .Select(origin => origin.TrimEnd('/')));
                 }
 
                 policy.WithOrigins(origins.ToArray())
