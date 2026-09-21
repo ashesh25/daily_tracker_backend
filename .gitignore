@@ -1,0 +1,33 @@
+# .NET build output
+**/bin/
+**/obj/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test and coverage output
+TestResults/
+coverage/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/appsettings.*.Local.json
+
+# Local HTTPS development certificates
+**/*.pfx
+
+# PostgreSQL / Docker local data
+**/pgdata/
+**/postgres-data/
+
+# OS files
+.DS_Store
+Thumbs.db
