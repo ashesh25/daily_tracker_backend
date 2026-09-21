@@ -39,6 +39,23 @@ public class Program
 
         builder.Services.AddAuthorization();
 
+        var frontendOrigin = builder.Configuration["Frontend:Origin"];
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Frontend", policy =>
+            {
+                var origins = new List<string> { "http://localhost:5173" };
+                if (!string.IsNullOrWhiteSpace(frontendOrigin))
+                {
+                    origins.Add(frontendOrigin);
+                }
+
+                policy.WithOrigins(origins.ToArray())
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+
         builder.Services.AddDbContext<DailyTrackerDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -53,6 +70,7 @@ public class Program
             app.UseHttpsRedirection();
         }
 
+        app.UseCors("Frontend");
         app.UseAuthentication();
         app.UseAuthorization();
 
